@@ -35,46 +35,82 @@ export default function App() {
 	return (
 		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800">
 			<div className="w-[41rem] shadow-md rounded p-10">
-				<div className="flex flex-col space-y-10">
-					<div className="flex justify-between">
-						<div>Principal Amount</div>
-						<div className="relative w-32">
+				<div className="flex flex-col space-y-12">
+					<div>
+						<div className="flex items-center justify-between">
+							<div>Principal Amount</div>
+							<div className="relative w-32">
+								<input
+									type="number"
+									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right shadow-inner text-green-800"
+									value={principalAmount}
+									onChange={(e) => setPrincipalAmount(Number(e.target.value))}
+								/>
+							</div>
+						</div>
+						<div className="w-full mt-5">
 							<input
-								type="number"
-								className="bg-green-200 rounded-sm py-1 px-2 w-full text-right shadow-inner"
+								type="range"
+								min="1000"
+								max="10000000"
 								value={principalAmount}
 								onChange={(e) => setPrincipalAmount(Number(e.target.value))}
+								className="w-full"
 							/>
 						</div>
 					</div>
-					<div className="flex justify-between">
-						<div>Interest Rate</div>
-						<div className="relative w-32">
+					<div>
+						<div className="flex items-center justify-between">
+							<div>Interest Rate</div>
+							<div className="relative w-32 text-green-800">
+								<input
+									type="number"
+									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-6 shadow-inner"
+									value={interestRate}
+									onChange={(e) => setInterestRate(Number(e.target.value))}
+								/>
+								<span className="absolute right-2 top-1">%</span>
+							</div>
+						</div>
+						<div className="w-full mt-5">
 							<input
-								type="number"
-								className="bg-green-200 rounded-sm py-1 px-2 w-full text-right pr-6 shadow-inner"
+								type="range"
+								min="1"
+								max="50"
 								value={interestRate}
 								onChange={(e) => setInterestRate(Number(e.target.value))}
+								className="w-full"
 							/>
-							<span className="absolute right-2 top-1">%</span>
 						</div>
 					</div>
-					<div className="flex justify-between">
-						<div>Time Period</div>
-						<div className="relative w-32">
+					<div>
+						<div className="flex items-center justify-between">
+							<div>Time Period</div>
+							<div className="relative w-32">
+								<input
+									type="number"
+									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right shadow-inner text-green-800"
+									value={timePeriod}
+									onChange={(e) => setTimePeriod(Number(e.target.value))}
+								/>
+							</div>
+						</div>
+						<div className="w-full mt-5">
 							<input
-								type="number"
-								className="bg-green-200 rounded-sm py-1 px-2 w-full text-right shadow-inner"
+								type="range"
+								min="1"
+								max="30"
 								value={timePeriod}
 								onChange={(e) => setTimePeriod(Number(e.target.value))}
+								className="w-full"
 							/>
 						</div>
 					</div>
-					<div className="flex justify-between">
+					<div className="flex items-center justify-between">
 						<div>Compounding Frequency</div>
 						<div className="relative w-32">
 							<select
-								className="bg-green-200 rounded-sm py-2 px-3 w-full text-right shadow-inner"
+								className="bg-green-100 rounded-sm py-2 px-3 w-full text-right shadow-inner text-green-800"
 								value={compoundingFrequency}
 								onChange={(e) =>
 									setCompoundingFrequency(
