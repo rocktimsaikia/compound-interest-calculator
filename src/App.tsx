@@ -65,7 +65,7 @@ export default function App() {
 							<div className="relative w-32 text-green-800">
 								<input
 									type="number"
-									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-6 shadow-inner"
+									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
 									value={interestRate}
 									onChange={(e) => setInterestRate(Number(e.target.value))}
 								/>
@@ -86,13 +86,14 @@ export default function App() {
 					<div>
 						<div className="flex items-center justify-between">
 							<div>Time Period</div>
-							<div className="relative w-32">
+							<div className="relative w-32 text-green-800">
 								<input
 									type="number"
-									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right shadow-inner text-green-800"
+									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
 									value={timePeriod}
 									onChange={(e) => setTimePeriod(Number(e.target.value))}
 								/>
+								<span className="absolute right-2 top-1">Yr</span>
 							</div>
 						</div>
 						<div className="w-full mt-5">
@@ -126,7 +127,7 @@ export default function App() {
 					</div>
 				</div>
 
-				<div className="mt-20 grid grid-cols-3 text-center">
+				<div className="mt-24 grid grid-cols-3 text-center">
 					<div>
 						<p className="text-gray-500">Principal Amount</p>
 						<p>₹{principalAmount.toLocaleString("en-IN")}</p>
