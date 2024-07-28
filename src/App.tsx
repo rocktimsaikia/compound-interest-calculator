@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import compounder from "compounder";
 import AnimatedCounter from "./components/animated-counter";
+import { TriangleUpIcon } from "@radix-ui/react-icons";
 
 type CompoundingFrequency = "quarterly" | "semi-annually" | "annually";
 
@@ -205,12 +206,29 @@ export default function App() {
 						<p className="text-gray-500">Total Interest</p>
 						<p>
 							₹ <AnimatedCounter start={totalInterest} locale="en-IN" />
+							<TriangleUpIcon
+								className="text-green-500 inline-block"
+								height="22"
+								width="22"
+							/>
 						</p>
 					</div>
 					<div>
 						<p className="text-gray-500">Total Amount</p>
 						<p>
 							₹ <AnimatedCounter start={totalAmount} locale="en-IN" />
+							<TriangleUpIcon
+								className="text-green-500 inline-block"
+								height="22"
+								width="22"
+							/>
+						</p>
+						<p className="text-green-600 text-xs">
+							+{" "}
+							{parseFloat(
+								String((totalInterest / principalAmount) * 100),
+							).toFixed(2)}{" "}
+							%
 						</p>
 					</div>
 				</div>
