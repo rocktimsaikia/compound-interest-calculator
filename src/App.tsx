@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import compounder from "compounder";
+import AnimatedCounter from "./components/animated-counter";
 
 type CompoundingFrequency = "quarterly" | "semi-annually" | "annually";
 
@@ -196,15 +197,21 @@ export default function App() {
 				<div className="mt-24 grid grid-cols-3 text-center">
 					<div>
 						<p className="text-gray-500">Principal Amount</p>
-						<p>₹{principalAmount.toLocaleString("en-IN")}</p>
+						<div>
+							₹ <AnimatedCounter start={principalAmount} locale="en-IN" />
+						</div>
 					</div>
 					<div>
 						<p className="text-gray-500">Total Interest</p>
-						<p>₹{totalInterest.toLocaleString("en-IN")}</p>
+						<p>
+							₹ <AnimatedCounter start={totalInterest} locale="en-IN" />
+						</p>
 					</div>
 					<div>
 						<p className="text-gray-500">Total Amount</p>
-						<p>₹{totalAmount.toLocaleString("en-IN")}</p>
+						<p>
+							₹ <AnimatedCounter start={totalAmount} locale="en-IN" />
+						</p>
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 # Compound Interest Calculator
 
-A minimal compound interest calculator that displays the total return of a compounded investment over a specified time period.
+A minimal compound interest investment calculator that displays the total returns over a specified time period, interest rate and compounding frequency.
 
 
 [![Deployment](https://github.com/rocktimsaikia/compound-interest-calculator/actions/workflows/deploy.yml/badge.svg)](https://github.com/rocktimsaikia/compound-interest-calculator/actions/workflows/deploy.yml)
