@@ -77,8 +77,8 @@ export default function App() {
 	}, []);
 
 	return (
-		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800">
-			<div className="w-[41rem] shadow-md rounded p-10">
+		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800 bg-[#f9fafb]">
+			<div className="w-[41rem] shadow-lg bg-white rounded-lg p-10">
 				<div className="flex flex-col space-y-12">
 					<div>
 						<div className="flex items-center justify-between">
