@@ -1,10 +1,10 @@
-# Compound Interest Calculator :
+# Compound Interest Calculator
 
 A minimal compound interest calculator that displays the total return of a compounded investment over a specified time period.
 
-> Currently work in progress!
+> :bulb: Currently work in progress!
 
-## Tech Stack:
+## Tech Stack
 - ReactJS
 - ViteJS
 - Typescript
