@@ -3,6 +3,24 @@ import compounder from "compounder";
 
 type CompoundingFrequency = "quarterly" | "semi-annually" | "annually";
 
+const PRINCIPAL_AMOUNT_RANGE = {
+	min: 1000,
+	max: 10000000,
+};
+const INTEREST_RATE_RANGE = {
+	min: 1,
+	max: 50,
+};
+const TIME_PERIOD_RANGE = {
+	min: 1,
+	max: 30,
+};
+
+function calcPercentageBetween(value: number, min: number, max: number) {
+	// Find the relative percentage with min-max normalizer.
+	return Math.round(((value - min) / (max - min)) * 100);
+}
+
 export default function App() {
 	const [principalAmount, setPrincipalAmount] = useState<number>(100000);
 	const [interestRate, setInterestRate] = useState<number>(6);
@@ -12,6 +30,10 @@ export default function App() {
 
 	const [totalInterest, setTotalInterest] = useState<number>(0);
 	const [totalAmount, setTotalAmount] = useState<number>(0);
+
+	const [principalPercent, setPrincipalPercent] = useState<number>(0);
+	const [interestPercent, setInterestPercent] = useState<number>(0);
+	const [timePeriodPercent, setTimePeriodPercent] = useState<number>(0);
 
 	function calculateInterest() {
 		const total = compounder({
@@ -25,12 +47,32 @@ export default function App() {
 		setTotalInterest(total - principalAmount);
 	}
 
-	useEffect(calculateInterest, [
-		principalAmount,
-		interestRate,
-		timePeriod,
-		compoundingFrequency,
-	]);
+	function calcPrincipalPercent(currentValue: number) {
+		const { min, max } = PRINCIPAL_AMOUNT_RANGE;
+		const x = calcPercentageBetween(currentValue, min, max);
+		setPrincipalPercent(x);
+	}
+	function calcInterestPercent(currentValue: number) {
+		const { min, max } = INTEREST_RATE_RANGE;
+		const x = calcPercentageBetween(currentValue, min, max);
+		setInterestPercent(x);
+	}
+	function calcTimeperiodPercent(currentValue: number) {
+		const { min, max } = TIME_PERIOD_RANGE;
+		const x = calcPercentageBetween(currentValue, min, max);
+		setTimePeriodPercent(x);
+	}
+
+	useEffect(() => {
+		calculateInterest();
+	}, [principalAmount, interestRate, timePeriod, compoundingFrequency]);
+
+	useEffect(() => {
+		// Set the initial normalized percentage value for the slider colorization.
+		calcPrincipalPercent(principalAmount);
+		calcInterestPercent(interestRate);
+		calcTimeperiodPercent(timePeriod);
+	}, []);
 
 	return (
 		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800">
@@ -44,18 +86,26 @@ export default function App() {
 									type="number"
 									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right shadow-inner text-green-800"
 									value={principalAmount}
-									onChange={(e) => setPrincipalAmount(Number(e.target.value))}
+									onChange={(e) => {
+										setPrincipalAmount(Number(e.target.value));
+										calcPrincipalPercent(Number(e.target.value));
+									}}
 								/>
 							</div>
 						</div>
 						<div className="w-full mt-5">
 							<input
 								type="range"
-								min="1000"
-								max="10000000"
+								min={PRINCIPAL_AMOUNT_RANGE.min}
+								max={PRINCIPAL_AMOUNT_RANGE.max}
 								value={principalAmount}
-								onChange={(e) => setPrincipalAmount(Number(e.target.value))}
-								className="w-full"
+								style={{
+									background: `linear-gradient(to right, #4ade80  ${principalPercent}%, #e5e7eb ${principalPercent}%)`,
+								}}
+								onChange={(e) => {
+									setPrincipalAmount(Number(e.target.value));
+									calcPrincipalPercent(Number(e.target.value));
+								}}
 							/>
 						</div>
 					</div>
@@ -67,7 +117,10 @@ export default function App() {
 									type="number"
 									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
 									value={interestRate}
-									onChange={(e) => setInterestRate(Number(e.target.value))}
+									onChange={(e) => {
+										setInterestRate(Number(e.target.value));
+										calcInterestPercent(Number(e.target.value));
+									}}
 								/>
 								<span className="absolute right-2 top-1">%</span>
 							</div>
@@ -75,11 +128,16 @@ export default function App() {
 						<div className="w-full mt-5">
 							<input
 								type="range"
-								min="1"
-								max="50"
+								min={INTEREST_RATE_RANGE.min}
+								max={INTEREST_RATE_RANGE.max}
 								value={interestRate}
-								onChange={(e) => setInterestRate(Number(e.target.value))}
-								className="w-full"
+								style={{
+									background: `linear-gradient(to right, #4ade80  ${interestPercent}%, #e5e7eb ${interestPercent}%)`,
+								}}
+								onChange={(e) => {
+									setInterestRate(Number(e.target.value));
+									calcInterestPercent(Number(e.target.value));
+								}}
 							/>
 						</div>
 					</div>
@@ -91,7 +149,10 @@ export default function App() {
 									type="number"
 									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
 									value={timePeriod}
-									onChange={(e) => setTimePeriod(Number(e.target.value))}
+									onChange={(e) => {
+										setTimePeriod(Number(e.target.value));
+										calcTimeperiodPercent(Number(e.target.value));
+									}}
 								/>
 								<span className="absolute right-2 top-1">Yr</span>
 							</div>
@@ -99,11 +160,16 @@ export default function App() {
 						<div className="w-full mt-5">
 							<input
 								type="range"
-								min="1"
-								max="30"
+								min={TIME_PERIOD_RANGE.min}
+								max={TIME_PERIOD_RANGE.max}
 								value={timePeriod}
-								onChange={(e) => setTimePeriod(Number(e.target.value))}
-								className="w-full"
+								style={{
+									background: `linear-gradient(to right, #4ade80  ${timePeriodPercent}%, #e5e7eb ${timePeriodPercent}%)`,
+								}}
+								onChange={(e) => {
+									setTimePeriod(Number(e.target.value));
+									calcTimeperiodPercent(Number(e.target.value));
+								}}
 							/>
 						</div>
 					</div>

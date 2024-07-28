@@ -18,3 +18,34 @@ input[type=number] {
 input, select {
 		outline: none;
 }
+
+@layer base{
+	input[type=range] {
+		-webkit-appearance: none;
+		appearance: none;
+		height: 5px;
+		width: 100%;
+		@apply bg-gray-200 rounded;
+	}
+
+	/* Chrome | Safari | Opera | Edge */
+	input[type=range]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		height: 20px;
+		width: 20px;
+		outline: none;
+		cursor: pointer;
+		@apply bg-green-400 border border-green-500 rounded-full shadow-sm;
+	}
+
+	/* Firefox */
+	input[type=range]::-moz-range-thumb {
+		height: 20px;
+		width: 20px;
+		outline: none;
+		cursor: pointer;
+		@apply bg-white border border-green-500 rounded-full shadow-sm;
+	}
+}
+
