@@ -25,9 +25,9 @@ function calcPercentageBetween(value: number, min: number, max: number) {
 }
 
 function clamp(value: number, min = 0, max = 100) {
-	if (value >= min && value <= max) return value;
 	if (value < min) return min;
-	return max;
+	if (value > max) return max;
+	return value;
 }
 
 export default function App() {
