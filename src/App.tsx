@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import compounder from "compounder";
 import AnimatedCounter from "./components/animated-counter";
 import { TriangleUpIcon } from "@radix-ui/react-icons";
+import { PieChart } from "react-minimal-pie-chart";
 
 type CompoundingFrequency = "quarterly" | "semi-annually" | "annually";
 
@@ -21,6 +22,12 @@ const TIME_PERIOD_RANGE = {
 function calcPercentageBetween(value: number, min: number, max: number) {
 	// Find the relative percentage with min-max normalizer.
 	return Math.round(((value - min) / (max - min)) * 100);
+}
+
+function clamp(value: number, min = 0, max = 100) {
+	if (value >= min && value <= max) return value;
+	if (value < min) return min;
+	return max;
 }
 
 export default function App() {
@@ -47,6 +54,10 @@ export default function App() {
 
 		setTotalAmount(total);
 		setTotalInterest(total - principalAmount);
+	}
+
+	function getTotalInterestPercentage() {
+		return (totalInterest / principalAmount) * 100;
 	}
 
 	function calcPrincipalPercent(currentValue: number) {
@@ -78,8 +89,8 @@ export default function App() {
 
 	return (
 		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800 bg-[#f9fafb]">
-			<div className="w-[41rem] shadow-lg bg-white rounded-lg p-10">
-				<div className="flex flex-col space-y-12">
+			<div className="w-[41rem]">
+				<div className="flex flex-col space-y-12 shadow-xl bg-white rounded-lg p-12">
 					<div>
 						<div className="flex items-center justify-between">
 							<div>Principal Amount</div>
@@ -195,41 +206,67 @@ export default function App() {
 					</div>
 				</div>
 
-				<div className="mt-24 grid grid-cols-3 text-center">
-					<div>
-						<p className="text-gray-500">Principal Amount</p>
+				<div>
+					<div className="relative">
+						<PieChart
+							className="-mt-32 -mb-72"
+							startAngle={180}
+							lengthAngle={180}
+							radius={20}
+							lineWidth={50}
+							data={[
+								{
+									title: "Total Return",
+									value: clamp(100 - getTotalInterestPercentage()),
+									color: "#8A2BE2",
+								},
+								{
+									title: "Interest Return",
+									value: clamp(getTotalInterestPercentage()),
+									color: "#4ade80",
+								},
+							]}
+							segmentsShift={0.5}
+						/>
+					</div>
+					<div className="grid grid-cols-3 text-center">
 						<div>
-							₹ <AnimatedCounter start={principalAmount} locale="en-IN" />
+							<p className="text-gray-500">Principal Amount</p>
+							<div>
+								₹ <AnimatedCounter start={principalAmount} locale="en-IN" />
+							</div>
 						</div>
-					</div>
-					<div>
-						<p className="text-gray-500">Total Interest</p>
-						<p>
-							₹ <AnimatedCounter start={totalInterest} locale="en-IN" />
-							<TriangleUpIcon
-								className="text-green-500 inline-block"
-								height="22"
-								width="22"
-							/>
-						</p>
-					</div>
-					<div>
-						<p className="text-gray-500">Total Amount</p>
-						<p>
-							₹ <AnimatedCounter start={totalAmount} locale="en-IN" />
-							<TriangleUpIcon
-								className="text-green-500 inline-block"
-								height="22"
-								width="22"
-							/>
-						</p>
-						<p className="text-green-600 text-xs">
-							+{" "}
-							{parseFloat(
-								String((totalInterest / principalAmount) * 100),
-							).toFixed(2)}{" "}
-							%
-						</p>
+						<div>
+							<div className="text-gray-500">
+								<div className="inline-block bg-[#4ade80] h-[11px] w-[11px] mr-2" />
+								Total Interest
+							</div>
+							<p>
+								₹ <AnimatedCounter start={totalInterest} locale="en-IN" />
+								<TriangleUpIcon
+									className="text-green-500 inline-block"
+									height="22"
+									width="22"
+								/>
+							</p>
+						</div>
+						<div>
+							<div className="text-gray-500">
+								<div className="inline-block bg-[#8A2BE2] h-[11px] w-[11px] mr-2" />
+								Total Amount
+							</div>
+							<p>
+								₹ <AnimatedCounter start={totalAmount} locale="en-IN" />
+								<TriangleUpIcon
+									className="text-green-500 inline-block"
+									height="22"
+									width="22"
+								/>
+							</p>
+							<p className="text-green-600 text-xs">
+								+ {getTotalInterestPercentage().toFixed(2)} %
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
