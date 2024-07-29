@@ -3,6 +3,7 @@ import compounder from "compounder";
 import AnimatedCounter from "./components/animated-counter";
 import { TriangleUpIcon } from "@radix-ui/react-icons";
 import { PieChart } from "react-minimal-pie-chart";
+import clamp from "clamp-v2";
 
 type CompoundingFrequency = "quarterly" | "semi-annually" | "annually";
 
@@ -22,12 +23,6 @@ const TIME_PERIOD_RANGE = {
 function calcPercentageBetween(value: number, min: number, max: number) {
 	// Find the relative percentage with min-max normalizer.
 	return Math.round(((value - min) / (max - min)) * 100);
-}
-
-function clamp(value: number, min = 0, max = 100) {
-	if (value < min) return min;
-	if (value > max) return max;
-	return value;
 }
 
 export default function App() {
@@ -220,12 +215,12 @@ export default function App() {
 							data={[
 								{
 									title: "Total Return",
-									value: clamp(100 - getTotalInterestPercentage()),
+									value: clamp(100 - getTotalInterestPercentage(), 0, 100),
 									color: "#8A2BE2",
 								},
 								{
 									title: "Interest Return",
-									value: clamp(getTotalInterestPercentage()),
+									value: clamp(getTotalInterestPercentage(), 0, 100),
 									color: "#4ade80",
 								},
 							]}

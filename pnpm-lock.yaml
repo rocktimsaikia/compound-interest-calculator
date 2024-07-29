@@ -11,6 +11,9 @@ importers:
       '@radix-ui/react-icons':
         specifier: ^1.3.0
         version: 1.3.0(react@18.3.1)
+      clamp-v2:
+        specifier: ^0.0.2
+        version: 0.0.2
       compounder:
         specifier: ^0.0.1
         version: 0.0.1
@@ -648,6 +651,10 @@ packages:
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
+
+  clamp-v2@0.0.2:
+    resolution: {integrity: sha512-Newyvcc4h4EWa6J6mSUuBim5XPFcDbB0m6pFTe0t9a+GAdJW0vEA7EybUMvWWEPGYljRgcdWYKgZG4z3j/QhAg==}
+    engines: {node: '>=18'}
 
   color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -1967,6 +1974,8 @@ snapshots:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  clamp-v2@0.0.2: {}
 
   color-convert@1.9.3:
     dependencies:
