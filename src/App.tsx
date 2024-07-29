@@ -89,6 +89,9 @@ export default function App() {
 
 	return (
 		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800 bg-[#f9fafb]">
+			<h1 className="text-xl font-semibold mb-10 opacity-35">
+				Compound Interest Calculator
+			</h1>
 			<div className="w-[41rem]">
 				<div className="flex flex-col space-y-12 shadow-xl bg-white rounded-lg p-12">
 					<div>
