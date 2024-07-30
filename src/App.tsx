@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import compounder from "compounder";
 import AnimatedCounter from "./components/animated-counter";
 import { TriangleUpIcon } from "@radix-ui/react-icons";
-import { PieChart } from "react-minimal-pie-chart";
-import clamp from "clamp-v2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "react-chartjs-2";
+
+const PRIMARY_GREEN = "rgba(74, 222, 128, 0.8)";
+const PRIMARY_VIOLET = "rgba(138, 43, 226, 0.8)";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 type CompoundingFrequency = "quarterly" | "semi-annually" | "annually";
 
@@ -82,21 +87,53 @@ export default function App() {
 		calcTimeperiodPercent(timePeriod);
 	}, []);
 
+	const data = {
+		datasets: [
+			{
+				label: "# of Votes",
+				data: [
+					getTotalInterestPercentage(),
+					100 - getTotalInterestPercentage(),
+				],
+				backgroundColor: [PRIMARY_GREEN, PRIMARY_VIOLET],
+				borderColor: ["#fff", "#fff"],
+				borderWidth: 1,
+			},
+		],
+	};
+
 	return (
-		<main className="flex flex-col justify-center items-center h-screen font-medium text-gray-800 bg-[#f9fafb]">
-			<h1 className="text-xl font-semibold mb-10 opacity-35">
-				Compound Interest Calculator
-			</h1>
-			<div className="w-[41rem]">
-				<div className="flex flex-col space-y-12 shadow-xl bg-white rounded-lg p-12">
-					<div>
-						<div className="flex items-center justify-between">
-							<div>Principal Amount</div>
-							<div className="relative w-32">
+		<main className="flex flex-col justify-center items-center font-medium text-gray-800 p-5">
+			<div className="grid lg:grid-cols-2 gap-4 mt-36">
+				<div className="lg:w-[36rem]">
+					<h1 className="text-lg text-center font-semibold mb-10 opacity-30">
+						🧩 <span className="underline">Compound Interest Calculator</span>
+					</h1>
+					<div className="flex flex-col space-y-12 shadow-xl bg-white rounded-lg p-12">
+						<div>
+							<div className="flex items-center justify-between">
+								<div>Principal Amount</div>
+								<div className="relative w-32">
+									<input
+										type="number"
+										className="bg-green-100 rounded-sm py-1 px-2 w-full text-right shadow-inner text-green-800"
+										value={principalAmount}
+										onChange={(e) => {
+											setPrincipalAmount(Number(e.target.value));
+											calcPrincipalPercent(Number(e.target.value));
+										}}
+									/>
+								</div>
+							</div>
+							<div className="w-full mt-5">
 								<input
-									type="number"
-									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right shadow-inner text-green-800"
+									type="range"
+									min={PRINCIPAL_AMOUNT_RANGE.min}
+									max={PRINCIPAL_AMOUNT_RANGE.max}
 									value={principalAmount}
+									style={{
+										background: `linear-gradient(to right, #4ade80  ${principalPercent}%, #e5e7eb ${principalPercent}%)`,
+									}}
 									onChange={(e) => {
 										setPrincipalAmount(Number(e.target.value));
 										calcPrincipalPercent(Number(e.target.value));
@@ -104,130 +141,95 @@ export default function App() {
 								/>
 							</div>
 						</div>
-						<div className="w-full mt-5">
-							<input
-								type="range"
-								min={PRINCIPAL_AMOUNT_RANGE.min}
-								max={PRINCIPAL_AMOUNT_RANGE.max}
-								value={principalAmount}
-								style={{
-									background: `linear-gradient(to right, #4ade80  ${principalPercent}%, #e5e7eb ${principalPercent}%)`,
-								}}
-								onChange={(e) => {
-									setPrincipalAmount(Number(e.target.value));
-									calcPrincipalPercent(Number(e.target.value));
-								}}
-							/>
-						</div>
-					</div>
-					<div>
-						<div className="flex items-center justify-between">
-							<div>Interest Rate</div>
-							<div className="relative w-32 text-green-800">
+						<div>
+							<div className="flex items-center justify-between">
+								<div>Interest Rate</div>
+								<div className="relative w-32 text-green-800">
+									<input
+										type="number"
+										className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
+										value={interestRate}
+										onChange={(e) => {
+											setInterestRate(Number(e.target.value));
+											calcInterestPercent(Number(e.target.value));
+										}}
+									/>
+									<span className="absolute right-2 top-1">%</span>
+								</div>
+							</div>
+							<div className="w-full mt-5">
 								<input
-									type="number"
-									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
+									type="range"
+									min={INTEREST_RATE_RANGE.min}
+									max={INTEREST_RATE_RANGE.max}
 									value={interestRate}
+									style={{
+										background: `linear-gradient(to right, #4ade80  ${interestPercent}%, #e5e7eb ${interestPercent}%)`,
+									}}
 									onChange={(e) => {
 										setInterestRate(Number(e.target.value));
 										calcInterestPercent(Number(e.target.value));
 									}}
 								/>
-								<span className="absolute right-2 top-1">%</span>
 							</div>
 						</div>
-						<div className="w-full mt-5">
-							<input
-								type="range"
-								min={INTEREST_RATE_RANGE.min}
-								max={INTEREST_RATE_RANGE.max}
-								value={interestRate}
-								style={{
-									background: `linear-gradient(to right, #4ade80  ${interestPercent}%, #e5e7eb ${interestPercent}%)`,
-								}}
-								onChange={(e) => {
-									setInterestRate(Number(e.target.value));
-									calcInterestPercent(Number(e.target.value));
-								}}
-							/>
-						</div>
-					</div>
-					<div>
-						<div className="flex items-center justify-between">
-							<div>Time Period</div>
-							<div className="relative w-32 text-green-800">
+						<div>
+							<div className="flex items-center justify-between">
+								<div>Time Period</div>
+								<div className="relative w-32 text-green-800">
+									<input
+										type="number"
+										className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
+										value={timePeriod}
+										onChange={(e) => {
+											setTimePeriod(Number(e.target.value));
+											calcTimeperiodPercent(Number(e.target.value));
+										}}
+									/>
+									<span className="absolute right-2 top-1">Yr</span>
+								</div>
+							</div>
+							<div className="w-full mt-5">
 								<input
-									type="number"
-									className="bg-green-100 rounded-sm py-1 px-2 w-full text-right pr-7 shadow-inner"
+									type="range"
+									min={TIME_PERIOD_RANGE.min}
+									max={TIME_PERIOD_RANGE.max}
 									value={timePeriod}
+									style={{
+										background: `linear-gradient(to right, #4ade80  ${timePeriodPercent}%, #e5e7eb ${timePeriodPercent}%)`,
+									}}
 									onChange={(e) => {
 										setTimePeriod(Number(e.target.value));
 										calcTimeperiodPercent(Number(e.target.value));
 									}}
 								/>
-								<span className="absolute right-2 top-1">Yr</span>
 							</div>
 						</div>
-						<div className="w-full mt-5">
-							<input
-								type="range"
-								min={TIME_PERIOD_RANGE.min}
-								max={TIME_PERIOD_RANGE.max}
-								value={timePeriod}
-								style={{
-									background: `linear-gradient(to right, #4ade80  ${timePeriodPercent}%, #e5e7eb ${timePeriodPercent}%)`,
-								}}
-								onChange={(e) => {
-									setTimePeriod(Number(e.target.value));
-									calcTimeperiodPercent(Number(e.target.value));
-								}}
-							/>
-						</div>
-					</div>
-					<div className="flex items-center justify-between">
-						<div>Compounding Frequency</div>
-						<div className="relative w-32">
-							<select
-								className="bg-green-100 rounded-sm py-2 px-3 w-full text-right shadow-inner text-green-800"
-								value={compoundingFrequency}
-								onChange={(e) =>
-									setCompoundingFrequency(
-										e.target.value as CompoundingFrequency,
-									)
-								}
-							>
-								<option value="quarterly">Quarterly</option>
-								<option value="semi-annually">Half Yearly</option>
-								<option value="annually">Yearly</option>
-							</select>
+						<div className="flex items-center justify-between">
+							<div>Compounding Frequency</div>
+							<div className="relative w-32">
+								<select
+									className="bg-green-100 rounded-sm py-2 px-3 w-full text-right shadow-inner text-green-800"
+									value={compoundingFrequency}
+									onChange={(e) => {
+										setCompoundingFrequency(
+											e.target.value as CompoundingFrequency,
+										);
+									}}
+								>
+									<option value="quarterly">Quarterly</option>
+									<option value="semi-annually">Half Yearly</option>
+									<option value="annually">Yearly</option>
+								</select>
+							</div>
 						</div>
 					</div>
 				</div>
-
-				<div>
-					<div className="relative">
-						<PieChart
-							className="-mt-32 -mb-72"
-							startAngle={180}
-							lengthAngle={180}
-							radius={20}
-							lineWidth={50}
-							data={[
-								{
-									title: "Total Return",
-									value: clamp(100 - getTotalInterestPercentage(), 0, 100),
-									color: "#8A2BE2",
-								},
-								{
-									title: "Interest Return",
-									value: clamp(getTotalInterestPercentage(), 0, 100),
-									color: "#4ade80",
-								},
-							]}
-							segmentsShift={0.5}
-						/>
+				<div className="flex flex-col justify-end">
+					<div className="w-[328px] mx-auto">
+						<Doughnut data={data} />
 					</div>
-					<div className="grid grid-cols-3 text-center">
+					<div className="grid grid-cols-3 text-center mt-10">
 						<div>
 							<p className="text-gray-500">Principal Amount</p>
 							<div>
@@ -236,7 +238,7 @@ export default function App() {
 						</div>
 						<div>
 							<div className="text-gray-500">
-								<div className="inline-block bg-[#4ade80] h-[11px] w-[11px] mr-2" />
+								<div className="inline-block bg-primary-green h-[11px] w-[11px] mr-2" />
 								Total Interest
 							</div>
 							<p>
@@ -250,7 +252,7 @@ export default function App() {
 						</div>
 						<div>
 							<div className="text-gray-500">
-								<div className="inline-block bg-[#8A2BE2] h-[11px] w-[11px] mr-2" />
+								<div className="inline-block bg-primary-violet h-[11px] w-[11px] mr-2" />
 								Total Amount
 							</div>
 							<p>

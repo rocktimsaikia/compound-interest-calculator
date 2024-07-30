@@ -20,6 +20,10 @@ input, select {
 }
 
 @layer base{
+	body {
+		@apply bg-[#f9fafb]
+	}
+
 	input[type=range] {
 		-webkit-appearance: none;
 		appearance: none;
